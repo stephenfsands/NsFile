@@ -25,3 +25,17 @@ C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\D
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\Debug\EegLab.csproj.CopyComplete
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\Debug\EEGLabFile.dll
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\Debug\EEGLabFile.pdb
+C:\Users\steph\Documents\NsFile-master\NsFile-master\NSFileTest\Install\EEGLabFile.dll
+C:\Users\steph\Documents\NsFile-master\NsFile-master\NSFileTest\Install\EEGLabFile.pdb
+C:\Users\steph\Documents\NsFile-master\NsFile-master\EEGLabFile\obj\Debug\EegLab.csprojAssemblyReference.cache
+C:\Users\steph\Documents\NsFile-master\NsFile-master\EEGLabFile\obj\Debug\EegLab.csproj.CoreCompileInputs.cache
+C:\Users\steph\Documents\NsFile-master\NsFile-master\EEGLabFile\obj\Debug\EegLab.csproj.CopyComplete
+C:\Users\steph\Documents\NsFile-master\NsFile-master\EEGLabFile\obj\Debug\EEGLabFile.dll
+C:\Users\steph\Documents\NsFile-master\NsFile-master\EEGLabFile\obj\Debug\EEGLabFile.pdb
+C:\Users\steph\source\repos\NsFile\NsFile\NSFileTest\Install\EEGLabFile.dll
+C:\Users\steph\source\repos\NsFile\NsFile\NSFileTest\Install\EEGLabFile.pdb
+C:\Users\steph\source\repos\NsFile\NsFile\EEGLabFile\obj\Debug\EegLab.csprojAssemblyReference.cache
+C:\Users\steph\source\repos\NsFile\NsFile\EEGLabFile\obj\Debug\EegLab.csproj.CoreCompileInputs.cache
+C:\Users\steph\source\repos\NsFile\NsFile\EEGLabFile\obj\Debug\EegLab.csproj.CopyComplete
+C:\Users\steph\source\repos\NsFile\NsFile\EEGLabFile\obj\Debug\EEGLabFile.dll
+C:\Users\steph\source\repos\NsFile\NsFile\EEGLabFile\obj\Debug\EEGLabFile.pdb

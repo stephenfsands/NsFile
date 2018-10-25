@@ -33,7 +33,6 @@ namespace NSFileAccess
             HandUnspecified
         }
 
-        private readonly object _get;
         private readonly ulong[] _id = new ulong[2];
         private readonly ulong[] _setupTagMainId = {0x805316f08a0502ce, 0x8a110b20a901f4f7};
         private string _asciizId = "NSI TFF";
@@ -41,9 +40,10 @@ namespace NSFileAccess
         private BinaryReader _binRead;
         private BinaryWriter _binWrite;
         private bool _dataAvailable;
+        private bool _electrodesAvailable;
         private long _dataPosition;
         private readonly List<float> _dataValues = new List<float>();
-        private long _EndOfHeaderPosition = 0;
+        private long _endOfHeaderPosition;
         private Epoch _epoch;
         private Event2 _Event;
         private readonly Event1 _event1 = new Event1();
@@ -59,7 +59,7 @@ namespace NSFileAccess
         private Fsp _fsp;
         private TagMainChunk _mainChunk;
         private TagSubChunk _mainSubChunk;
-        private readonly List<ElectrodeStructure> _mElectrode = new List<ElectrodeStructure>();
+        private readonly List<ElectrodeStructure> _electrode = new List<ElectrodeStructure>();
         private Occular _occular;
         private readonly List<NsElectrodeStruct> _scanElectrodeV3 = new List<NsElectrodeStruct>();
         private NsHeaderStruct _scanHeader;
@@ -822,7 +822,10 @@ namespace NSFileAccess
                 throw;
             }
 
-            for (var i = 0; i < NumberOfChannels; i++) WriteElectrode(i);
+            for (var i = 0; i < NumberOfChannels; i++)
+            {
+                WriteElectrode(i);
+            }
             _dataPosition = _binWrite.BaseStream.Position;
             if (FileType == FileTypes.Continuous)
             {
@@ -1071,7 +1074,7 @@ namespace NSFileAccess
                 var handle = GCHandle.Alloc(readBuffer, GCHandleType.Pinned);
                 electrode = (ElectrodeStructure) Marshal.PtrToStructure(handle.AddrOfPinnedObject(),
                     typeof(ElectrodeStructure));
-                _mElectrode.Add(electrode);
+                _electrode.Add(electrode);
             }
         }
 
@@ -1106,7 +1109,7 @@ namespace NSFileAccess
         {
             for (var i = 0; i < NumberOfChannels; i++)
             {
-                var electrode = _mElectrode.ElementAt(i);
+                var electrode = _electrode.ElementAt(i);
                 SetItem((int) SetupTags.Electrode + i, Marshal.SizeOf(electrode), StructureToByteArray(electrode),
                     (int) VersionTags.Electrode);
             }
@@ -1361,6 +1364,7 @@ namespace NSFileAccess
             var headerSize = Marshal.SizeOf(header);
 
             headerSize += electrodeSize;
+            _endOfHeaderPosition = headerSize;
             return headerSize;
         }
 
@@ -1392,6 +1396,7 @@ namespace NSFileAccess
             electrode.lab = label;
             if (i < NumberOfChannels)
                 _scanElectrodeV3[i] = electrode;
+            _electrodesAvailable = true;
         }
 
         /// <summary>

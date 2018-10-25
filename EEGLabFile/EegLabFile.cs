@@ -60,6 +60,7 @@ namespace EegLabFile
 
                     if (line.Contains("elec_names"))
                     {
+                        // This will retrieve the electrode label and put them in the nsfile object
                         var elect = line.Substring(line.IndexOf('[') + 1)
                             .Split(']'); 
                         var electNames = string.Join(",", elect);
@@ -68,6 +69,15 @@ namespace EegLabFile
                         {
                             SetElectrodeLabel(i, electLab[i]); 
                         }
+                        // if the object is filled then we will stuff the calibration values into the same stucture
+                        // of the already allocated electrodes.  This is because we just have electrodes and we can't 
+                        // do it above with the calibration.  NS stores calibration values indivdually for each channel 
+                        // is not a concept of global calibration. 
+                        for (var i = 0; i < NumberOfChannels; ++i)
+                        {
+                            SetElectrodeCalibration(i, (float)CalibrationScaleFactor);
+                        }
+
                         continue;
                     }
 

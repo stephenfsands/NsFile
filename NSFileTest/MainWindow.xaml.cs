@@ -25,9 +25,6 @@ namespace NSFileTest
                 DefaultExt = ".cnt",
                 Filter = "Neuroscan files|*.cnt;*.avg;*.eeg|EEG Lab|*.data|All files|*.*"
             };
-            // Default file name
-            // Default file extension
-
 
             // Show open file dialog box
             var result = dlg.ShowDialog();
@@ -85,15 +82,18 @@ namespace NSFileTest
             {
                 // Open document
                 var filename = dlg.FileName;
+                var name = Path.GetFileNameWithoutExtension(filename);
                 var ret=false;
                 if (_dataFile.FileType == NsFile.FileTypes.Continuous)
                 {
-                    ret=_dataFile.WriteData(filename);
+                    name += ".cnt";
+                    ret=_dataFile.WriteData(name);
                     if (ret) HeaderListBox.Items.Add("Cnt file out");
                 }
                 else
                 {
-                    ret=_dataFile.WriteData(filename);
+                    name += ".avg";
+                    ret=_dataFile.WriteData(name);
                     if (ret) HeaderListBox.Items.Add("Cnt file out");
                 }
             }

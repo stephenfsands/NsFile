@@ -33,3 +33,9 @@ C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\NSData\obj\Debug
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\NSData\obj\Debug\NSFile.csproj.CoreCompileInputs.cache
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\NSData\obj\Debug\NSFileAcces.dll
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\NSData\obj\Debug\NSFileAcces.pdb
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSFileTest\Install\NSFileAcces.dll
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSFileTest\Install\NSFileAcces.pdb
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSData\obj\Debug\NsFile.csprojAssemblyReference.cache
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSData\obj\Debug\NsFile.csproj.CoreCompileInputs.cache
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSData\obj\Debug\NSFileAcces.dll
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSData\obj\Debug\NSFileAcces.pdb

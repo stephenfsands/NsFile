@@ -25,3 +25,10 @@ C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\D
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\Debug\EegLab.csproj.CopyComplete
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\Debug\EEGLabFile.dll
 C:\Users\steve\Desktop\NSFileTest_july28_2018_matlab\NSFileTest\EEGLabFile\obj\Debug\EEGLabFile.pdb
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSFileTest\Install\EEGLabFile.dll
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\NSFileTest\Install\EEGLabFile.pdb
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\EEGLabFile\obj\Debug\EegLab.csprojAssemblyReference.cache
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\EEGLabFile\obj\Debug\EegLab.csproj.CoreCompileInputs.cache
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\EEGLabFile\obj\Debug\EegLab.csproj.CopyComplete
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\EEGLabFile\obj\Debug\EEGLabFile.dll
+C:\Users\steve\Documents\GitHub\NsFile\.git\stephenfsands\NsFile\EEGLabFile\obj\Debug\EEGLabFile.pdb

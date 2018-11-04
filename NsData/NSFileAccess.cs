@@ -43,9 +43,9 @@ namespace NSFileAccess
         private bool _dataAvailable;
         private long _dataPosition;
         private readonly List<float> _dataValues = new List<float>();
-        private long _EndOfHeaderPosition = 0;
+        private long _endOfHeaderPosition;
         private Epoch _epoch;
-        private Event2 _Event;
+        private Event2 _event;
         private readonly Event1 _event1 = new Event1();
         private uint _eventCount;
         private readonly List<Event2> _eventTable = new List<Event2>();
@@ -64,7 +64,7 @@ namespace NSFileAccess
         private readonly List<NsElectrodeStruct> _scanElectrodeV3 = new List<NsElectrodeStruct>();
         private NsHeaderStruct _scanHeader;
         private SubjectInfo _subject;
-        private TagId _TagId = new TagId();
+        private TagId _tagId = new TagId();
         private Teeg _teeg;
         private Trigger _trigger;
         private readonly List<float> _varianceValues = new List<float>();
@@ -173,7 +173,7 @@ namespace NSFileAccess
         /// </summary>
         protected string Time
         {
-            get => _scanHeader.time;
+            private get => _scanHeader.time;
             set
             {
                 _asciizId = value;
@@ -255,7 +255,7 @@ namespace NSFileAccess
         /// <summary>
         ///     Offset in bytes to next file in linked files
         /// </summary>
-        public uint NextFile
+        private uint NextFile
         {
             get => _scanHeader.NextFile;
             set => _scanHeader.NextFile = value;
@@ -264,7 +264,7 @@ namespace NSFileAccess
         /// <summary>
         ///     Offset in bytes to previous file
         /// </summary>
-        public uint PrevFile
+        private uint PrevFile
         {
             get => _scanHeader.PrevFile;
             set => _scanHeader.PrevFile = value;
@@ -282,18 +282,15 @@ namespace NSFileAccess
 
                 if (_scanHeader.savemode == (byte) NsDefinitions.ContinuousEegMode) return FileTypes.Continuous;
 
-                if (_scanHeader.domain == (byte) NsDefinitions.TimeDomain &&
-                    _scanHeader.savemode != (byte) NsDefinitions.FastSinglePoint)
-                {
-                    if (_scanHeader.type == (byte) NsDefinitions.AveragedFileType
-                        || _scanHeader.type == (byte) NsDefinitions.GroupAverage
-                        || _scanHeader.type == (byte) NsDefinitions.ComparisonAverage
-                        || _scanHeader.type == (byte) NsDefinitions.GroupComparsion)
-                        return FileTypes.Average;
-                    return FileTypes.Unknown;
-                }
-
+                if (_scanHeader.domain != (byte) NsDefinitions.TimeDomain ||
+                    _scanHeader.savemode == (byte) NsDefinitions.FastSinglePoint) return FileTypes.Unknown;
+                if (_scanHeader.type == (byte) NsDefinitions.AveragedFileType
+                    || _scanHeader.type == (byte) NsDefinitions.GroupAverage
+                    || _scanHeader.type == (byte) NsDefinitions.ComparisonAverage
+                    || _scanHeader.type == (byte) NsDefinitions.GroupComparsion)
+                    return FileTypes.Average;
                 return FileTypes.Unknown;
+
             }
             set => _scanHeader.type = (byte) value;
         }
@@ -679,7 +676,7 @@ namespace NSFileAccess
 
             var handle = GCHandle.Alloc(readBuffer, GCHandleType.Pinned);
             _teeg = (Teeg) Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Teeg));
-            var eventSize = (uint) Marshal.SizeOf(_Event);
+            var eventSize = (uint) Marshal.SizeOf(_event);
 
             var unused = (uint) Marshal.SizeOf(_event1);
 
@@ -691,7 +688,7 @@ namespace NSFileAccess
 
         private void ReadNextEvent()
         {
-            var length = Marshal.SizeOf(_Event);
+            var length = Marshal.SizeOf(_event);
             byte[] readBuffer;
             try
             {
@@ -704,10 +701,10 @@ namespace NSFileAccess
             }
 
             var handle = GCHandle.Alloc(readBuffer, GCHandleType.Pinned);
-            _Event = (Event2) Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Event2));
+            _event = (Event2) Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Event2));
             handle.Free();
 
-            _eventTable.Add(_Event);
+            _eventTable.Add(_event);
         }
 
         public uint GetEventCount()
@@ -734,8 +731,8 @@ namespace NSFileAccess
 
         private void WriteNextEvent(int index)
         {
-            _Event = _eventTable.ElementAt(index);
-            var writeBuffer = StructureToByteArray(_Event);
+            _event = _eventTable.ElementAt(index);
+            var writeBuffer = StructureToByteArray(_event);
             try
             {
                 _binWrite.Write(writeBuffer);
@@ -934,10 +931,10 @@ namespace NSFileAccess
             _dataAvailable = true;
         }
 
-        protected bool WriteCntData()
+        protected void WriteCntData()
         {
             if (!_dataAvailable)
-                return false;
+                return;
             try
             {
                 _binWrite.BaseStream.Seek(_dataPosition, SeekOrigin.Begin);
@@ -949,7 +946,7 @@ namespace NSFileAccess
 
             //double[] sensitivity = new double[numberOfChannels];
             var sensitivity = new double[NumberOfChannels];
-            if (_scanElectrodeV3.Count == 0) return false;
+            if (_scanElectrodeV3.Count == 0) return;
 
             for (var index = 0; index < NumberOfChannels; index++)
             {
@@ -968,8 +965,7 @@ namespace NSFileAccess
                     Debug.WriteLine("Failed to seek to start of data. Reason: " + e.Message);
                     throw;
                 }
-
-            return true;
+            
         }
 
         private void WriteAvgData()
@@ -1598,7 +1594,7 @@ namespace NSFileAccess
             return 0;
         }
 
-        private long WriteTeegFileHeader()
+        private void WriteTeegFileHeader()
         {
             var bufferId = new byte[8];
             char[] idTag = {'N', 'S', 'I', ' ', 'T', 'F', 'F'};
@@ -1614,7 +1610,7 @@ namespace NSFileAccess
                 catch (Exception e)
                 {
                     Debug.WriteLine("Failed to write header in TEEG. Reason: " + e.Message);
-                    return 0;
+                    return;
                 }
 
                 var writeBuffer = StructureToByteArray(_mainChunk);
@@ -1625,7 +1621,7 @@ namespace NSFileAccess
                 catch (Exception e)
                 {
                     Debug.WriteLine("Failed to write header in TEEG. Reason: " + e.Message);
-                    return 0;
+                    return;
                 }
 
                 var writeBuffer2 = StructureToByteArray(_mainSubChunk);
@@ -1636,16 +1632,12 @@ namespace NSFileAccess
                 catch (Exception e)
                 {
                     Debug.WriteLine("Failed to write file header in TEEG. Reason: " + e.Message);
-                    return 0;
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine("Failed to write file header in TEEG. Reason: " + e.Message);
-                return 0;
             }
-
-            return 8 + Marshal.SizeOf(_mainChunk) + Marshal.SizeOf(_mainSubChunk);
         }
 
         // Read header, in error return -1, in success return 
@@ -1979,13 +1971,13 @@ namespace NSFileAccess
         /// </summary>
         private struct Electrodes3D
         {
-            private float Xpos; // X position in 3-space, cm
-            private float Ypos; // Y position in 3-space, cm
-            private float Zpos; // Z position in 3-space, cm
-            private byte Available; // is XYZ position info available?
+            private float _xpos; // X position in 3-space, cm
+            private float _ypos; // Y position in 3-space, cm
+            private float _zpos; // Z position in 3-space, cm
+            private byte _available; // is XYZ position info available?
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 19)]
-            private string Label; // reserved space
+            private string _label; // reserved space
         }
 
         /// <summary>
@@ -1993,28 +1985,28 @@ namespace NSFileAccess
         /// </summary>
         private struct AngleSetup
         {
-            private float Phi;
-            private float Theta;
-            private float Radius;
-            private uint x;
-            private uint y;
+            private float _phi;
+            private float _theta;
+            private float _radius;
+            private uint _x;
+            private uint _y;
         }
 
         private struct SoundSetup
         {
-            private uint enable; //Sound enabled
-            private int weight; // Weighting
-            private uint left; // Side that sound will appear on
+            private uint _enable; //Sound enabled
+            private int _weight; // Weighting
+            private uint _left; // Side that sound will appear on
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-            private string unused;
+            private string _unused;
         }
 
 
         private struct CompareSetup
         {
-            private uint color; // Color of waveforms
-            private uint index; // index of electrode	
+            private uint _color; // Color of waveforms
+            private uint _index; // index of electrode	
         }
 
 
@@ -2023,34 +2015,34 @@ namespace NSFileAccess
         /// </summary>
         private struct EkgReduction
         {
-            private uint _bEnable;
-            private uint _nAverages;
-            private float _fStartTrig;
-            private float _fEndTrig;
-            private float _fStartArtifact;
-            private float _fEndArtifact;
-            private float _fThreshold;
-            private uint _nDirection;
-            private uint _nTrigChan;
-            private uint _bArtRej;
-            private float _fArtMin;
-            private float _fArtMax;
-            private uint _bCorrectTrigChan;
-            private uint _nTrigType;
-            private uint _nExtTrigCode;
-            private uint _bUseResponseCode;
-            private uint _bBipolar;
-            private uint _nBipolarRefChanIndex;
-            private uint _bDeMean;
-            private float _fRefractoryPeriod;
-            private uint _nShiftLimit;
-            private uint _nCorrelationThreshold;
-            private uint _bEnableCorrelation;
-            private uint _bInsertEvents;
-            private uint _nCorChan;
-            private uint _nQrsMethod;
+            private uint _enable;
+            private uint _averages;
+            private float _startTrig;
+            private float _endTrig;
+            private float _startArtifact;
+            private float _endArtifact;
+            private float _threshold;
+            private uint _direction;
+            private uint _trigChan;
+            private uint _artRej;
+            private float _artMin;
+            private float _artMax;
+            private uint _correctTrigChan;
+            private uint _trigType;
+            private uint _extTrigCode;
+            private uint _useResponseCode;
+            private uint _bipolar;
+            private uint _bipolarRefChanIndex;
+            private uint _deMean;
+            private float _refractoryPeriod;
+            private uint _shiftLimit;
+            private uint _correlationThreshold;
+            private uint _enableCorrelation;
+            private uint _insertEvents;
+            private uint _corChan;
+            private uint _qrsMethod;
             private Filter _filterSettings; // filter settings;
-            private uint _bDilate;
+            private uint _dilate;
         }
 
         /// <summary>
@@ -2058,35 +2050,33 @@ namespace NSFileAccess
         /// </summary>
         private struct LineFilter
         {
-            private uint _bEnable;
+            uint _enable;
+            uint _averages;
+            float _startTrig;
+            float _endTrig;
+            float _startArtifact;
+            float _endArtifact;
+            float _threshold;
+            uint _direction;
+            uint _trigChan;
+            uint _artRej;
+            float _artMin;
+            float _artMax;	
+            uint _correctTrigChan;
+            uint _trigType;
+            uint _extTrigCode;	
+            uint _useResponseCode;
+            uint _bipolar;	
+            uint _bipolarRefChanIndex;
+            uint _deMean;
+            float _refractoryPeriod;
+            uint _shiftLimit;
 
-            private uint _nAverages;
-
-            //	float fStartTrig;
-            //	float fEndTrig;
-            //	float fStartArtifact;
-            //	float fEndArtifact;	
-            //	float fThreshold;
-            //	uint nDirection;	
-            //	uint nTrigChan;
-            //	uint bArtRej;
-            //	float fArtMin;
-            //	float fArtMax;	
-            //	uint bCorrectTrigChan;
-            //	uint nTrigType;
-            //	uint nExtTrigCode;	
-            //	uint bUseResponseCode;
-            //	uint bBipolar;	
-            //	uint nBipolarRefChanIndex;
-            //	uint bDeMean;
-            //	float fRefractoryPeriod;
-            private uint _nShiftLimit;
-
-            //	uint nCorrelationThreshold;
+            	uint nCorrelationThreshold;
             //	uint bEnableCorrelation;
             //uint bInsertEvents;	
             private uint _nCorChan;
-            //	uint nQRSMethod;
+            //	uint QRSMethod;
             //	SETUP_FILTER FilterSettings;				// filter settings;
         }
 

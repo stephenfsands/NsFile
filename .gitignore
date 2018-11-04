@@ -30,6 +30,8 @@ x64/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+obj/
+
 *_i.c
 *_p.c
 *.ilk
@@ -212,6 +214,7 @@ project.lock.json
 *.feature.cs
 *.feature.xlsx.*
 *.Specs_*.html
+
 
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)

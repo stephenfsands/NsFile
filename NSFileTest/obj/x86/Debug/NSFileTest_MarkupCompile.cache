@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿NSFileTest
 
 
@@ -18,3 +19,25 @@ MainWindow.xaml;
 
 False
 
+=======
+﻿NSFileTest
+
+
+winexe
+C#
+.cs
+C:\Users\steph\source\repos\NsFile\NsFile\NSFileTest\obj\x86\Debug\
+NSFileTest
+none
+false
+DEBUG;TRACE
+C:\Users\steph\source\repos\NsFile\NsFile\NSFileTest\App.xaml
+11151548125
+
+5-2017746502
+14-1990609184
+MainWindow.xaml;
+
+False
+
+>>>>>>> d83e555e07cdfb1a0a84e04fafc86bd00862bb26
